@@ -1,0 +1,22 @@
+# Never commit secrets or local Splunk bits
+*.key
+*.pem
+*.pfx
+*.crt
+*.der
+*.jks
+*.kdb
+*.sav
+*.sqlite
+*.log
+*local*
+*.conf.bak
+*.tmp
+*.swp
+*.DS_Store
+
+# Python/venv (if you write playbooks)
+.vscode/
+__pycache__/
+.venv/
+*.pyc
