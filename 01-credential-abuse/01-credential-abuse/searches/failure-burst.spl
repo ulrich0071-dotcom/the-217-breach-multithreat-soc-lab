@@ -1,0 +1,8 @@
+index=winsec EventCode=4625
+| rex field=_raw "(?s)Account For Which Logon Failed:\s*(?<failsec>.*?)(?:Failure Information:|Process Information:|Network Information:|Detailed Authentication Information:|$)"
+| rex field=failsec "(?i)Account Name:\s+(?<user>[^\r\n]+)"
+| eval user=coalesce(user,TargetUserName,Account_Name,SubjectUserName)
+| where user!="" AND user!="-"
+| bin _time span=15m
+| stats count as failures by _time user
+| where failures>=2   /* raise to 6–10 in prod */
