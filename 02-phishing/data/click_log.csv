@@ -1,0 +1,4 @@
+time,user,url,click_ip,browser,verdict
+2025-08-20 02:18:20,finance@acme.local,https://quickbookspay.io/login,127.0.0.1,Chrome,malicious
+2025-08-20 02:18:50,finance@acme.local,https://quickbookspay.io/2fa,127.0.0.1,Chrome,malicious
+2025-08-20 07:43:05,labuser@acme.local,https://ups.com/track,127.0.0.1,Chrome,benign
