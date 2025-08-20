@@ -1,0 +1,12 @@
+(index=winsec EventCode=4625) OR (index=winsec EventCode=4624)
+| rex field=_raw "(?s)Account For Which Logon Failed:\s*(?<failsec>.*?)(?:Failure Information:|Process Information:|Network Information:|Detailed Authentication Information:|$)"
+| rex field=failsec "(?i)Account Name:\s+(?<failUser>[^\r\n]+)"
+| rex field=_raw "(?s)New Logon:.*?Account Name:\s+(?<newUser>[^\r\n]+)"
+| eval user=coalesce(newUser,failUser,TargetUserName,Account_Name,SubjectUserName)
+| where user!="" AND user!="-"
+| eval is_fail=if(EventCode=4625,1,0), is_succ=if(EventCode=4624,1,0)
+| bin _time span=5m
+| stats sum(is_fail) as fails sum(is_succ) as succ earliest(_time) as window_start latest(_time) as window_end by user _time
+| where fails>=2 AND succ>=1   /* raise to 6–10 in prod */
+| table window_start window_end user fails succ
+| sort - window_end
