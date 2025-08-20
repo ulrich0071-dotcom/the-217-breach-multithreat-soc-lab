@@ -1,0 +1,14 @@
+index=winsec EventCode=4625
+| rex "(?i)Status:\s+(?<status>\S+)"
+| rex "(?i)Sub Status:\s+(?<substatus>\S+)"
+| eval reason=case(
+  status=="0xC000006A","Bad password",
+  status=="0xC0000064","No such user",
+  status=="0xC0000234","Account locked",
+  status=="0xC000006D","Bad user name/unknown",
+  status=="0xC0000072","Account disabled",
+  status=="0xC000006F","Account restricted",
+  substatus=="0xC0000133","Clock skew",
+  true(),"Other")
+| stats count by reason status substatus
+| sort - count
