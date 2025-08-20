@@ -1,0 +1,4 @@
+time,user,from,subject,attachment,verdict,delivery
+2025-08-20 02:17:00,finance@acme.local,alerts@quickbookspay.io,Payment Advice #8231,Invoice_8231.pdf,malicious,delivered
+2025-08-20 02:18:10,bob@acme.local,security@azuremfa.com,Action Required - MFA Reset,,malicious,delivered
+2025-08-20 07:42:00,labuser@acme.local,shipping@upsnotify.net,UPS Delivery Notice,,benign,delivered
