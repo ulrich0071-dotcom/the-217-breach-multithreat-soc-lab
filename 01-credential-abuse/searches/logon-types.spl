@@ -1,0 +1,8 @@
+index=winsec (EventCode=4625 OR EventCode=4624)
+| rex "(?i)Logon Type:\s+(?<lt>\d+)"
+| eval logon_type=case(
+  lt=="2","Interactive", lt=="3","Network", lt=="4","Batch", lt=="5","Service",
+  lt=="7","Unlock", lt=="8","NetworkCleartext", lt=="9","NewCredentials",
+  lt=="10","RemoteInteractive/RDP", lt=="11","CachedInteractive", true(),lt)
+| stats count by logon_type
+| sort - count
