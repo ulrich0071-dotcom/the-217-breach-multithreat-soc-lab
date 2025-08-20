@@ -1,0 +1,14 @@
+index=phish sourcetype=phish:click verdict=malicious
+| eval acct=lower(replace(user,"@.*",""))          /* email user -> samAccountName */
+| bin _time span=5m
+| stats values(url) as urls values(click_ip) as click_ips by acct _time
+| rename _time as window
+| join acct window
+  [ search index=winsec EventCode=4625
+    | eval acct=lower(replace(coalesce(TargetUserName,Account_Name,SubjectUserName),"\\$",""))
+    | bin _time span=5m
+    | stats count as fails values(IpAddress) as fail_ips by acct _time
+    | rename _time as window ]
+| where fails>0
+| table window acct urls click_ips fails fail_ips
+| sort - window
